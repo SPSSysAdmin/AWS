@@ -1,0 +1,87 @@
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+  },
+  "metrics": {
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceName": "${aws:Tag/Name}"
+    },
+    "metrics_collected": {
+      "cpu": {
+        "measurement": ["cpu_usage_idle", "cpu_usage_iowait"],
+        "metrics_collection_interval": 10
+      },
+      "disk": {
+        "measurement": ["disk_used_percent"],
+        "resources": ["/", "/aemauth", "/aempub"],
+        "metrics_collection_interval": 60,
+        "statistic_set": {
+          "percentiles": [90, 95, 99]
+        }
+      },
+      "mem": {
+        "measurement": ["mem_used_percent"]
+      }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/secure",
+            "log_group_name": "SystemLogs",
+            "log_stream_name": "{instance_id}-secure"
+          },
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "SystemLogs",
+            "log_stream_name": "{instance_id}-messages"
+          },
+          {
+            "file_path": "/aemauth/author/crx-quickstart/logs/error.log",
+            "log_group_name": "AEM-Author-Logs",
+            "log_stream_name": "{instance_id}-auth-error"
+          },
+          {
+            "file_path": "/aemauth/author/crx-quickstart/logs/access.log",
+            "log_group_name": "AEM-Author-Logs",
+            "log_stream_name": "{instance_id}-auth-access"
+          },
+          {
+            "file_path": "/aempub/publish/crx-quickstart/logs/error.log",
+            "log_group_name": "AEM-Publish-Logs",
+            "log_stream_name": "{instance_id}-pub-error"
+          },
+          {
+            "file_path": "/aempub/publish/crx-quickstart/logs/access.log",
+            "log_group_name": "AEM-Publish-Logs",
+            "log_stream_name": "{instance_id}-pub-access"
+          },
+          {
+            "file_path": "/usr/local/tomcat/logs/scpsweb.log",
+            "log_group_name": "TomcatLogs",
+            "log_stream_name": "{instance_id}-scpsweb"
+          },
+          {
+            "file_path": "/var/log/httpd/ssl_access_log",
+            "log_group_name": "HTTPD-Logs",
+            "log_stream_name": "{instance_id}-ssl-access"
+          },
+          {
+            "file_path": "/var/log/httpd/ssl_error_log",
+            "log_group_name": "HTTPD-Logs",
+            "log_stream_name": "{instance_id}-ssl-error"
+          },
+          {
+            "file_path": "/var/log/httpd/dispatcher.log",
+            "log_group_name": "HTTPD-Logs",
+            "log_stream_name": "{instance_id}-dispatcher"
+          }
+        ]
+      }
+    }
+  }
+}
